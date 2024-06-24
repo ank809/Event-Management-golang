@@ -30,7 +30,7 @@ func LoginAttendee(c *gin.Context) {
 	coll := database.OpenCollection(database.Client, collection_name)
 	err := coll.FindOne(context.TODO(), bson.M{"name": user.Name}).Decode(&foundUser)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, "User not found")
 		log.Println(err)
 		return
 	}

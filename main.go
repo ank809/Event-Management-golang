@@ -11,6 +11,7 @@ func main() {
 	r := gin.Default()
 	r.POST("/signup", authentication.SignUp)
 	r.GET("/loginattendee", authentication.LoginAttendee)
+	r.GET("/loginmanager", authentication.EventManagerLogin)
 	if err := r.Run(":8081"); err != nil {
 		fmt.Println(err)
 	}
