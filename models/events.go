@@ -5,7 +5,8 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 type Event struct {
 	ID        primitive.ObjectID `bson:"_id"`
 	Name      string             `json:"name"`
-	DateTime  primitive.DateTime `json:"datetime"`
+	DateTime  string             `json:"datetime"`
 	Venue     string             `json:"venue"`
-	Attendess int                `json:"attendees"`
+	Attendees int                `json:"attendees"`
+	Organizer string             `json:"organizer"`
 }
