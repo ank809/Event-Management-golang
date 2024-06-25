@@ -28,7 +28,8 @@ func AddEvent(c *gin.Context) {
 		return
 	}
 	event.ID = primitive.NewObjectID()
-	event.Attendees = 0
+	event.TotalAttendees = 0
+	event.Attendees = []models.RegisterUser{}
 	parsedTime, err := time.Parse(time.RFC1123, event.DateTime)
 	if err != nil {
 		log.Println("Error parsing date time:", err)

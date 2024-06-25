@@ -16,6 +16,8 @@ func main() {
 	r.POST("/addevent", controllers.AddEvent)
 	r.GET("/deleteevent/:id", controllers.DeleteEvents)
 	r.POST("/updateevent/:id", controllers.UpdateEvent)
+	r.GET("/readevents", controllers.ReadAllEvents)
+	r.GET("/registerevent/:id", controllers.RegisterEvent)
 	if err := r.Run(":8081"); err != nil {
 
 		fmt.Println(err)
