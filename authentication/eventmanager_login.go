@@ -47,6 +47,7 @@ func EventManagerLogin(c *gin.Context) {
 	expiration_time := time.Now().Add(time.Minute * 5)
 	claims := &models.Claims{
 		Name: manager.Name,
+		Role: "EventManager",
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiration_time.Unix(),
 		},

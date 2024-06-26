@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/ank809/Event-Management-golang~/database"
@@ -16,7 +17,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var jwt_key = []byte("secret_key")
+// var jwt_key = []byte("secret_key")
 
 func LoginAttendee(c *gin.Context) {
 	var user models.User
@@ -41,10 +42,11 @@ func LoginAttendee(c *gin.Context) {
 		return
 	}
 
-	expiration_time := time.Now().Add(time.Second * 5)
+	expiration_time := time.Now().Add(time.Minute * 5)
 
 	claims := &models.Claims{
 		Name: user.Name,
+		Role: "Attendee",
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiration_time.Unix(),
 		},
@@ -55,6 +57,7 @@ func LoginAttendee(c *gin.Context) {
 		log.Println(err)
 		return
 	}
+	jwt_key := []byte(os.Getenv("JWT_KEY"))
 	tokenString, err := token.SignedString(jwt_key)
 	if err != nil {
 		fmt.Println("hghh")
