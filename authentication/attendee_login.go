@@ -17,8 +17,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// var jwt_key = []byte("secret_key")
-
 func LoginAttendee(c *gin.Context) {
 	var user models.User
 	var foundUser models.User
@@ -42,11 +40,13 @@ func LoginAttendee(c *gin.Context) {
 		return
 	}
 
-	expiration_time := time.Now().Add(time.Minute * 5)
+	expiration_time := time.Now().Add(time.Minute * 10)
 
 	claims := &models.Claims{
-		Name: user.Name,
-		Role: "Attendee",
+		Name:        foundUser.Name,
+		Role:        foundUser.Role,
+		Email:       foundUser.Email,
+		PhoneNumber: foundUser.PhoneNumber,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiration_time.Unix(),
 		},
@@ -60,7 +60,6 @@ func LoginAttendee(c *gin.Context) {
 	jwt_key := []byte(os.Getenv("JWT_KEY"))
 	tokenString, err := token.SignedString(jwt_key)
 	if err != nil {
-		fmt.Println("hghh")
 		fmt.Println(err.Error())
 		return
 	}
@@ -70,5 +69,5 @@ func LoginAttendee(c *gin.Context) {
 		Expires: expiration_time,
 	})
 	c.JSON(http.StatusOK, gin.H{"token": tokenString,
-		"success": "User loggin Successfully"})
+		"success": "User login Successfully"})
 }

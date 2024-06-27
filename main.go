@@ -11,19 +11,23 @@ import (
 
 func main() {
 	r := gin.Default()
-	eventroutes := r.Group("/events")
-	eventroutes.Use(middlewares.AuthMiddleware())
-	eventroutes.Use(middlewares.Authorize("EventManager"))
-	{
-		eventroutes.POST("/addevent", controllers.AddEvent)
-		eventroutes.GET("/deleteevent/:id", controllers.DeleteEvents)
-		eventroutes.POST("/updateevent/:id", controllers.UpdateEvent)
-	}
 	r.POST("/signup", authentication.SignUp)
 	r.GET("/loginattendee", authentication.LoginAttendee)
 	r.GET("/loginmanager", authentication.EventManagerLogin)
-	r.GET("/readevents", controllers.ReadAllEvents)
-	r.GET("/registerevent/:id", controllers.RegisterEvent)
+	authenticatedroutes := r.Group("/")
+	authenticatedroutes.Use(middlewares.AuthMiddleware())
+	{
+		authenticatedroutes.GET("/readevents", controllers.ReadAllEvents)
+		authenticatedroutes.GET("/registerevent/:id", controllers.RegisterEvent)
+	}
+	protectedeventroutes := r.Group("/events")
+	protectedeventroutes.Use(middlewares.AuthMiddleware())
+	protectedeventroutes.Use(middlewares.Authorize("EventManager"))
+	{
+		protectedeventroutes.POST("/addevent", controllers.AddEvent)
+		protectedeventroutes.GET("/deleteevent/:id", controllers.DeleteEvents)
+		protectedeventroutes.POST("/updateevent/:id", controllers.UpdateEvent)
+	}
 	if err := r.Run(":8081"); err != nil {
 
 		fmt.Println(err)

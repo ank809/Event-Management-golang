@@ -44,10 +44,12 @@ func EventManagerLogin(c *gin.Context) {
 		return
 	}
 	key := []byte(os.Getenv("JWT_KEY"))
-	expiration_time := time.Now().Add(time.Minute * 5)
+	expiration_time := time.Now().Add(time.Minute * 10)
 	claims := &models.Claims{
-		Name: manager.Name,
-		Role: "EventManager",
+		Name:        foundManager.Name,
+		Role:        foundManager.Role,
+		PhoneNumber: foundManager.PhoneNumber,
+		Email:       foundManager.Email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiration_time.Unix(),
 		},
@@ -64,7 +66,7 @@ func EventManagerLogin(c *gin.Context) {
 	})
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "User logged in successfully",
+		"message": "Manager logged in successfully",
 		"token":   tokenstring,
 	})
 }

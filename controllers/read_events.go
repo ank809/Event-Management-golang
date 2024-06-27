@@ -16,7 +16,6 @@ func ReadAllEvents(c *gin.Context) {
 
 	collection_name := "Events"
 	coll := database.OpenCollection(database.Client, collection_name)
-	// ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	cursor, err := coll.Find(context.TODO(), bson.M{})
 	if err != nil {
 		log.Println("Hello")
@@ -24,8 +23,12 @@ func ReadAllEvents(c *gin.Context) {
 		return
 	}
 	if err := cursor.All(context.TODO(), &events); err != nil {
-		log.Println("HI")
-		c.JSON(http.StatusNoContent, err)
+		log.Println("Error decoding documents:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode documents"})
+		return
+	}
+	if len(events) == 0 {
+		c.JSON(http.StatusNoContent, gin.H{"message": "No events found"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

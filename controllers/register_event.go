@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/ank809/Event-Management-golang~/database"
@@ -19,11 +20,19 @@ func RegisterEvent(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
+	userClaims, exists := c.Get("user")
+	log.Println("User claims", userClaims)
+	if !exists {
+		c.JSON(http.StatusInternalServerError, "User not found")
+		return
+	}
+	claims := userClaims.(*models.Claims)
+	log.Println("Current user", claims)
 	var user models.RegisterUser = models.RegisterUser{
 		ID:          primitive.NewObjectID(),
-		Name:        "Jane Doe",
-		Email:       "jane.doe@example.com",
-		PhoneNumber: "+1234567890",
+		Name:        claims.Name,
+		Email:       claims.Email,
+		PhoneNumber: claims.PhoneNumber,
 	}
 
 	collection_name := "Events"
@@ -32,7 +41,7 @@ func RegisterEvent(c *gin.Context) {
 	err = coll.FindOne(context.TODO(), bson.M{"_id": objectId}).Decode(&res)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			c.JSON(http.StatusNotFound, "NO documents found")
+			c.JSON(http.StatusNotFound, "No documents found")
 			return
 		} else {
 			c.JSON(http.StatusNotFound, err)
