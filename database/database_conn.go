@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
-	"os"
+	"log"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -18,12 +18,14 @@ func DBInstance() *mongo.Client {
 		fmt.Println("Error in Dot env")
 		fmt.Println(err)
 	}
-	url := os.Getenv("MONGO_URI")
+	// url := os.Getenv("MONGO_URI")
+	url := "mongodb+srv://harshhvstech1975:Tara.com@123@cluster0.kjpnfit.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
 	if err != nil {
+		log.Println("Error hi")
 		fmt.Println(err.Error())
 	}
 	return client
