@@ -11,6 +11,9 @@ import (
 
 func main() {
 	r := gin.Default()
+	r.GET("/hello", func(ctx *gin.Context) {
+		ctx.JSON(200, "HELLO WORLD")
+	})
 	r.POST("/signup", authentication.SignUp)
 	r.GET("/loginattendee", authentication.LoginAttendee)
 	r.GET("/loginmanager", authentication.EventManagerLogin)

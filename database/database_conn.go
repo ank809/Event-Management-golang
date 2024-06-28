@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -18,8 +19,7 @@ func DBInstance() *mongo.Client {
 		fmt.Println("Error in Dot env")
 		fmt.Println(err)
 	}
-	// url := os.Getenv("MONGO_URI")
-	url := "mongodb+srv://harshhvstech1975:Tara.com@123@cluster0.kjpnfit.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+	url := os.Getenv("MONGO_URI")
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
